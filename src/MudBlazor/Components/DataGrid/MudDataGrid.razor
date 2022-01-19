@@ -106,12 +106,12 @@
                                     {
                                         if (!column.Hidden)
                                         {
-                                            <Cell Item="@item" Title="@column.Title" Field="@column.Field" Class="@column.cellClassname"
-                                                CellTemplate="@column.CellTemplate" ColumnType="@column.Type" Style="@column.CellStyle"
-                                                IsEditable="@(column.IsEditable ?? true)" EditTemplate="@column.EditTemplate"
-                                                CellClass="@column.CellClass" CellClassFunc="@column.CellClassFunc"
-                                                CellStyle="@column.CellStyle" CellStyleFunc="@column.CellStyleFunc"></Cell>
-                                        }
+                                        <Cell Item="@item" Title="@column.Title" Field="@column.Field" Class="@column.cellClassname"
+                                            CellTemplate="@column.CellTemplate" ColumnType="@column.Type" Style="@column.CellStyle"
+                                            IsEditable="@(column.IsEditable ?? true)" EditTemplate="@column.EditTemplate"
+                                            CellClass="@column.CellClass" CellClassFunc="@column.CellClassFunc"
+                                            CellStyle="@column.CellStyle" CellStyleFunc="@column.CellStyleFunc"></Cell>
+                                    }
                                     }
                                         
                                     @if (EditMode == DataGridEditMode.Inline)

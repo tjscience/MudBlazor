@@ -49,11 +49,6 @@ namespace MudBlazor
         /// </summary>
         [Parameter] public bool? Filterable { get; set; }
         /// <summary>
-        /// Determines whether this column can be hidden. This overrides the Hideable parameter on the DataGrid.
-        /// </summary>
-        [Parameter] public bool? Hideable { get; set; }
-        public bool Hidden { get; set; }
-        /// <summary>
         /// Determines whether to show or hide column options. This overrides the ShowColumnOptions parameter on the DataGrid.
         /// </summary>
         [Parameter] public bool? ShowColumnOptions { get; set; }
