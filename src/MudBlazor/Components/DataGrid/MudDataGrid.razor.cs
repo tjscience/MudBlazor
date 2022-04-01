@@ -28,7 +28,7 @@ namespace MudBlazor
         private HashSet<object> _groupExpansions = new HashSet<object>();
         private List<GroupDefinition<T>> _groups = new List<GroupDefinition<T>>();
         private PropertyInfo[] _properties = typeof(T).GetProperties();
-
+        private string _sortField;
         protected string _classname =>
             new CssBuilder("mud-table")
                .AddClass("mud-data-grid")
@@ -628,6 +628,7 @@ namespace MudBlazor
                 Page = CurrentPage,
                 PageSize = RowsPerPage,
                 SortBy = _sortBy,
+                SortField = _sortField,
                 SortDirection = _direction,
                 // Additional ToList() here to decouple clients from internal list avoiding runtime issues
                 FilterDefinitions = FilterDefinitions.ToList()
@@ -852,6 +853,7 @@ namespace MudBlazor
         {
             _direction = direction;
             _sortBy = sortBy;
+            _sortField = field;
             SortChangedEvent?.Invoke(field);
             await InvokeServerLoadFunc();
             StateHasChanged();

@@ -14,7 +14,7 @@ namespace MudBlazor
         public int PageSize { get; set; }
 
         public Func<T, object> SortBy { get; set; }
-
+        public string SortField { get; set; }
         public SortDirection SortDirection { get; set; }
 
         public ICollection<FilterDefinition<T>> FilterDefinitions { get; set; }
