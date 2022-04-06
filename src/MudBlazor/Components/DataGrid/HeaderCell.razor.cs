@@ -198,8 +198,7 @@ namespace MudBlazor
         {
             if (Column != null)
             {
-                Column.Hide();
-                await Column.HiddenChanged.InvokeAsync(Column.Hidden);
+                await Column.Hide();
                 DataGrid.ExternalStateHasChanged();
             }
         }

@@ -325,19 +325,22 @@ namespace MudBlazor
             grouping = false;
         }
 
-        public void Hide()
+        public async Task Hide()
         {
             Hidden = true;
+            await HiddenChanged.InvokeAsync(Hidden);
         }
 
-        public void Show()
+        public async Task Show()
         {
             Hidden = false;
+            await HiddenChanged.InvokeAsync(Hidden);
         }
 
-        public void Toggle()
+        public async Task Toggle()
         {
             Hidden = !Hidden;
+            await HiddenChanged.InvokeAsync(Hidden);
             DataGrid.ExternalStateHasChanged();
         }
 
