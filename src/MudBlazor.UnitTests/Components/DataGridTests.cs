@@ -1252,8 +1252,8 @@ namespace MudBlazor.UnitTests.Components
             items = comp.FindAll("div.mud-list-item").ToArray();
             items[1].Click();
 
-            await comp.InvokeAsync(() => filters[0].Instance.ValueChangedAsync("test"));
-            await comp.InvokeAsync(() => filters[1].Instance.ValueChangedAsync(55));
+            await comp.InvokeAsync(() => filters[0].Instance.StringValueChanged("test"));
+            await comp.InvokeAsync(() => filters[1].Instance.NumberValueChanged(55));
 
             filterDefinition.Value.Should().Be("test");
             filterDefinition2.Value.Should().Be(55);
