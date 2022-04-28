@@ -1252,8 +1252,8 @@ namespace MudBlazor.UnitTests.Components
             items = comp.FindAll("div.mud-list-item").ToArray();
             items[1].Click();
 
-            await comp.InvokeAsync(() => filters[0].Instance.StringValueChanged("test"));
-            await comp.InvokeAsync(() => filters[1].Instance.NumberValueChanged(55));
+            await comp.InvokeAsync(() => filters[0].Instance.StringValueChangedAsync("test"));
+            await comp.InvokeAsync(() => filters[1].Instance.NumberValueChangedAsync(55));
 
             filterDefinition.Value.Should().Be("test");
             filterDefinition2.Value.Should().Be(55);
@@ -1265,12 +1265,11 @@ namespace MudBlazor.UnitTests.Components
             removeFilter.Click();
             filters = comp.FindComponents<Filter<DataGridFiltersTest.Model>>();
 
+            // validate ui is updated on remove
             var numericFilterValue = filters[0].FindComponent<MudNumericField<double?>>();
             Assert.AreEqual(filters[0].Instance.Value, 55);
             numericFilterValue.Instance.Value?.Should().Be(55);
             numericFilterValue.Instance.Text.Should().Be("55");
-
-            
 
 
             // assertions for int

@@ -13,7 +13,7 @@
     </MudSelect>
 </MudItem>
 <MudItem xs="3">
-    <MudSelect @bind-Value="_operator" FullWidth="true" Label="Operator" Dense="true" Margin="@Margin.Dense">
+    <MudSelect T="string" Value="Operator" ValueChanged="@OperatorChangedAsync"  FullWidth="true" Label="Operator" Dense="true" Margin="@Margin.Dense">
         @foreach (var o in FilterOperator.GetOperatorByDataType(dataType))
         {
             <MudSelectItem Value="@o">@o</MudSelectItem>
@@ -21,17 +21,17 @@
     </MudSelect>
 </MudItem>
 <MudItem xs="4">
-    @if (dataType == typeof(string) && !(_operator ?? "").EndsWith("empty"))
+    @if (dataType == typeof(string) && !(Operator ?? "").EndsWith("empty"))
     {
-        <MudTextField T="string" Value="@_valueString" ValueChanged="@StringValueChanged" FullWidth="true" Label="Value" Placeholder="Filter value" Margin="@Margin.Dense" Immediate="true"></MudTextField>
+        <MudTextField T="string" Value="@_valueString" ValueChanged="@StringValueChangedAsync" FullWidth="true" Label="Value" Placeholder="Filter value" Margin="@Margin.Dense" Immediate="true"></MudTextField>
     }
-    else if (isNumber && !(_operator ?? "").EndsWith("empty"))
+    else if (isNumber && !(Operator ?? "").EndsWith("empty"))
     {
-        <MudNumericField T="double?" Value="@_valueNumber" ValueChanged="@NumberValueChanged" FullWidth="true" Label="Value" Placeholder="Filter value" Margin="@Margin.Dense" Immediate="true"></MudNumericField>
+        <MudNumericField T="double?" Value="@_valueNumber" ValueChanged="@NumberValueChangedAsync" FullWidth="true" Label="Value" Placeholder="Filter value" Margin="@Margin.Dense" Immediate="true"></MudNumericField>
     }
     else if (isEnum)
     {
-        <MudSelect T="Enum" Value="@_valueEnum" ValueChanged="@EnumValueChanged" FullWidth="true" Dense="true" Margin="@Margin.Dense">
+        <MudSelect T="Enum" Value="@_valueEnum" ValueChanged="@EnumValueChangedAsync" FullWidth="true" Dense="true" Margin="@Margin.Dense">
             <MudSelectItem T="Enum" Value="@(null)"></MudSelectItem>
             @foreach (var item in Enum.GetValues(dataType))
             {
@@ -41,20 +41,20 @@
     }
     else if (dataType == typeof(bool))
     {
-        <MudSelect T="bool?" Value="@_valueBool" ValueChanged="@BoolValueChanged" FullWidth="true" Dense="true" Margin="@Margin.Dense">
+        <MudSelect T="bool?" Value="@_valueBool" ValueChanged="@BoolValueChangedAsync" FullWidth="true" Dense="true" Margin="@Margin.Dense">
             <MudSelectItem T="bool?" Value="@(null)"></MudSelectItem>
             <MudSelectItem T="bool?" Value="@(true)">true</MudSelectItem>
             <MudSelectItem T="bool?" Value="@(false)">false</MudSelectItem>
         </MudSelect>
     }
-    else if (dataType == typeof(DateTime) && !(_operator ?? "").EndsWith("empty"))
+    else if (dataType == typeof(DateTime) && !(Operator ?? "").EndsWith("empty"))
     {
         <MudGrid Spacing="0">
             <MudItem xs="7">
-                <MudDatePicker Date="@_valueDate" DateChanged="@DateValueChanged" Margin="@Margin.Dense" />
+                <MudDatePicker Date="@_valueDate" DateChanged="@DateValueChangedAsync" Margin="@Margin.Dense" />
             </MudItem>
             <MudItem xs="5">
-                <MudTimePicker Time="@_valueTime" TimeChanged="@TimeValueChanged" Margin="@Margin.Dense" />
+                <MudTimePicker Time="@_valueTime" TimeChanged="@TimeValueChangedAsync" Margin="@Margin.Dense" />
             </MudItem>
         </MudGrid>
     }

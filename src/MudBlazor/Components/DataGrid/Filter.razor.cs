@@ -21,26 +21,26 @@ namespace MudBlazor
         [Parameter] public Type FieldType { get; set; }
         [Parameter] public string Title { get; set; }
         [Parameter] public string Operator { get; set; }
-        [Parameter] public object Value { get; set; }
+        
+        [Parameter] public object Value
+        {
+            get => _value;
+            set
+            {
+                if(_value != value)
+                {
+                    _value = value;
+                    OnInitialized();
+                }            
+            }
+        }
+
         [Parameter] public EventCallback<string> FieldChanged { get; set; }
         [Parameter] public EventCallback<string> TitleChanged { get; set; }
         [Parameter] public EventCallback<string> OperatorChanged { get; set; }
         [Parameter] public EventCallback<object> ValueChanged { get; set; }
 
-        private string __operator;
-        private string _operator
-        {
-            get
-            {
-                return __operator;
-            }
-            set
-            {
-                __operator = value;
-                Operator = __operator;
-                OperatorChanged.InvokeAsync(Operator);
-            }
-        }
+        private object _value;
         private string _valueString;
         private double? _valueNumber;
         private Enum _valueEnum = null;
@@ -85,10 +85,9 @@ namespace MudBlazor
 
         #endregion
 
+
         protected override void OnInitialized()
         {
-            __operator = Operator;
-
             if (dataType == typeof(string))
                 _valueString = Value == null ? null : Value.ToString();
             else if (isNumber)
@@ -107,13 +106,18 @@ namespace MudBlazor
 
         internal async Task FieldChangedAsync(string field)
         {
+            
+            Value = null;           
+            await ValueChanged.InvokeAsync(Value);
+            OnInitialized();
+
             Field = field;
+            await FieldChanged.InvokeAsync(Field);
+
             var operators = FilterOperator.GetOperatorByDataType(dataType);
             Operator = operators.FirstOrDefault();
-            Value = null;
+
             await OperatorChanged.InvokeAsync(Operator);
-            await ValueChanged.InvokeAsync(Value);
-            await FieldChanged.InvokeAsync(Field);
         }
 
         internal void TitleChangedAsync(string field)
@@ -121,35 +125,39 @@ namespace MudBlazor
             Field = field;
         }
 
-        internal void StringValueChanged(string value)
+        internal async Task StringValueChangedAsync(string value)
         {
+            Value = value;
             _valueString = value;
-            ValueChanged.InvokeAsync(value);
+            await ValueChanged.InvokeAsync(value);
             DataGrid.GroupItems();
         }
 
-        internal void NumberValueChanged(double? value)
+        internal async Task NumberValueChangedAsync(double? value)
         {
+            Value = value;
             _valueNumber = value;
-            ValueChanged.InvokeAsync(value);
+            await ValueChanged.InvokeAsync(value);
             DataGrid.GroupItems();
         }
 
-        internal void EnumValueChanged(Enum value)
+        internal async Task EnumValueChangedAsync(Enum value)
         {
+            Value = value;
             _valueEnum = value;
-            ValueChanged.InvokeAsync(value);
+            await ValueChanged.InvokeAsync(value);
             DataGrid.GroupItems();
         }
 
-        internal void BoolValueChanged(bool? value)
+        internal async Task BoolValueChangedAsync(bool? value)
         {
+            Value = value;
             _valueBool = value;
-            ValueChanged.InvokeAsync(value);
+            await ValueChanged.InvokeAsync(value);
             DataGrid.GroupItems();
         }
 
-        internal void DateValueChanged(DateTime? value)
+        internal async Task DateValueChangedAsync(DateTime? value)
         {
             _valueDate = value;
 
@@ -160,18 +168,21 @@ namespace MudBlazor
                 // get the time component and add it to the date.
                 if (_valueTime != null)
                 {
-                    date.Add(_valueTime.Value);
+                    date = date.Add(_valueTime.Value);
                 }
-
-                ValueChanged.InvokeAsync(date);
+                Value = date;
+                await ValueChanged.InvokeAsync(date);
             }
             else
-                ValueChanged.InvokeAsync(value);
+            {
+                Value = value;
+                await ValueChanged.InvokeAsync(value);
+            }
 
             DataGrid.GroupItems();
         }
 
-        internal void TimeValueChanged(TimeSpan? value)
+        internal async Task TimeValueChangedAsync(TimeSpan? value)
         {
             _valueTime = value;
 
@@ -186,10 +197,17 @@ namespace MudBlazor
                     date = date.Add(_valueTime.Value);
                 }
 
-                ValueChanged.InvokeAsync(date);
+                Value = date;
+                await ValueChanged.InvokeAsync(date);
             }
 
             DataGrid.GroupItems();
+        }
+
+        internal async Task OperatorChangedAsync(string op)
+        {
+            Operator = op;
+            await OperatorChanged.InvokeAsync(Operator);
         }
 
         internal void RemoveFilter()
