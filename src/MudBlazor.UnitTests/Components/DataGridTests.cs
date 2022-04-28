@@ -1265,6 +1265,14 @@ namespace MudBlazor.UnitTests.Components
             removeFilter.Click();
             filters = comp.FindComponents<Filter<DataGridFiltersTest.Model>>();
 
+            var numericFilterValue = filters[0].FindComponent<MudNumericField<double?>>();
+            Assert.AreEqual(filters[0].Instance.Value, 55);
+            numericFilterValue.Instance.Value?.Should().Be(55);
+            numericFilterValue.Instance.Text.Should().Be("55");
+
+            
+
+
             // assertions for int
             Assert.AreEqual(filterDefinition2.Id, filters[0].Instance.Id);
             Assert.AreEqual(filterDefinition2.Field, filters[0].Instance.Field);
