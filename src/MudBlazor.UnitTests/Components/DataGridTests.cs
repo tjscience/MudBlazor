@@ -1252,15 +1252,42 @@ namespace MudBlazor.UnitTests.Components
             items = comp.FindAll("div.mud-list-item").ToArray();
             items[1].Click();
 
-            await comp.InvokeAsync(() => filters[0].Instance.StringValueChanged("test"));
-            await comp.InvokeAsync(() => filters[1].Instance.NumberValueChanged(55));
+            await comp.InvokeAsync(() => filters[0].Instance.ValueChangedAsync("test"));
+            await comp.InvokeAsync(() => filters[1].Instance.ValueChangedAsync(55));
 
             filterDefinition.Value.Should().Be("test");
             filterDefinition2.Value.Should().Be(55);
 
+            // remove first filter
+            filters = comp.FindComponents<Filter<DataGridFiltersTest.Model>>();
+            var removeFilterButtons = filters[0].FindComponents<MudIconButton>();
+            var removeFilter = removeFilterButtons[0].Find("button");
+            removeFilter.Click();
+            filters = comp.FindComponents<Filter<DataGridFiltersTest.Model>>();
+
+            // assertions for int
+            Assert.AreEqual(filterDefinition2.Id, filters[0].Instance.Id);
+            Assert.AreEqual(filterDefinition2.Field, filters[0].Instance.Field);
+            Assert.AreEqual(filterDefinition2.Operator, filters[0].Instance.Operator);
+            Assert.AreEqual(filterDefinition2.Value, filters[0].Instance.Value);
+            filters[0].Instance.Value = 45;
+            await comp.InvokeAsync(async () => await filters[0].Instance.ValueChanged.InvokeAsync(filters[0].Instance.Value));
+            Assert.AreEqual(filterDefinition2.Value, 45);
+
+            // assertions for Enum
+            Assert.AreEqual(filterDefinition3.Id, filters[1].Instance.Id);
+            Assert.AreEqual(filterDefinition3.Field, filters[1].Instance.Field);
+            Assert.AreEqual(filterDefinition3.Operator, filters[1].Instance.Operator);
+            Assert.AreEqual(filterDefinition3.Value, filters[1].Instance.Value);
+            filters[1].Instance.Value = Severity.Error;
+            await comp.InvokeAsync(async () => await filters[1].Instance.ValueChanged.InvokeAsync(filters[1].Instance.Value));
+            Assert.AreEqual(filterDefinition3.Value, Severity.Error);
+
+
+
             await comp.InvokeAsync(() => filters[0].Instance.RemoveFilter());
             filters = comp.FindComponents<Filter<DataGridFiltersTest.Model>>();
-            filters.Count.Should().Be(5);
+            filters.Count.Should().Be(4);
 
             // toggle the filters menu (should be closed after this)
             await comp.InvokeAsync(() => dataGrid.Instance.ToggleFiltersMenu());
